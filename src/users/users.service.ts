@@ -7,13 +7,15 @@ import { HttpStatus } from '@nestjs/common/enums';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { UserQueryParams } from './interface/user.interface';
+import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
+import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
+import { PageDto } from 'src/common/dtos/page.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -33,34 +35,37 @@ export class UsersService {
     user.role = role;
     user.image = image;
 
-    return await this.usersRepository.save(user);
+    return await this.userRepository.save(user);
   }
 
-  async findAll(query?: UserQueryParams) {
-    const { page, limit } = query;
-    console.log(query);
+  async findAll(pageOptionsDto: PageOptionsDto) {
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
 
-    return await this.usersRepository.find({
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    queryBuilder.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   async findOne(id: string) {
     try {
-      return await this.usersRepository.findOne({ where: { id } });
+      return await this.userRepository.findOne({ where: { id } });
     } catch (error) {
       console.log(error);
     }
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOne({ where: { email } });
+    return await this.userRepository.findOne({ where: { email } });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-      return await this.usersRepository.update(id, updateUserDto);
+      return await this.userRepository.update(id, updateUserDto);
     } catch (error) {
       console.log(error);
     }
