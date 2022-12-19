@@ -41,7 +41,7 @@ export class UsersService {
   async findAll(pageOptionsDto: PageOptionsDto) {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
 
-    queryBuilder.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+    queryBuilder.skip(pageOptionsDto.skip).limit(pageOptionsDto.limit);
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
