@@ -12,8 +12,9 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
+import { UserQueryParamDto } from './dto/user-query-param.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -28,12 +29,11 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiQuery({ name: 'search', type: 'string', required: false })
   async findAll(
     @Query() pageOptionsDto: PageOptionsDto,
-    @Query() search: string,
+    @Query() params: UserQueryParamDto,
   ) {
-    return this.userService.findAll(pageOptionsDto);
+    return this.userService.findAll(pageOptionsDto, params);
   }
 
   @Get(':id')

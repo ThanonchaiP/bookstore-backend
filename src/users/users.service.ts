@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as argon2 from 'argon2';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,7 @@ import { User } from './entities/user.entity';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
 import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
 import { PageDto } from 'src/common/dtos/page.dto';
+import { UserQueryParamDto } from './dto/user-query-param.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,8 +21,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const { firstname, lastname, email, password, phone, role, image } =
-      createUserDto;
+    const { firstname, lastname, email, password, phone, role, image } = createUserDto;
 
     if (await this.findByEmail(email)) {
       throw new HttpException('Email already exists.', HttpStatus.CONFLICT);
@@ -38,8 +39,16 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async findAll(pageOptionsDto: PageOptionsDto) {
+  async findAll(pageOptionsDto: PageOptionsDto, params: UserQueryParamDto) {
+    const { search } = params;
+
     const queryBuilder = this.userRepository.createQueryBuilder('user');
+
+    if (search) {
+      queryBuilder.where('user.firstname LIKE :search', {
+        search: `%${search}%`,
+      });
+    }
 
     queryBuilder.skip(pageOptionsDto.skip).take(pageOptionsDto.limit);
 
@@ -54,9 +63,7 @@ export class UsersService {
   async findOne(id: string) {
     try {
       return await this.userRepository.findOne({ where: { id } });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   async findByEmail(email: string) {

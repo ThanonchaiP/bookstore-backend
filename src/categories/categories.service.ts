@@ -1,8 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoriesService {
-  getCategory() {
-    return { message: 'Success', data: { result: 'Service' } };
+  constructor(
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+  ) {}
+
+  async getCategory() {
+    return { message: 'Success', data: await this.categoryRepository.find() };
   }
 }
