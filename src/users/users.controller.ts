@@ -12,7 +12,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
 
 @ApiTags('Users')
@@ -28,7 +28,11 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query() pageOptionsDto: PageOptionsDto) {
+  @ApiQuery({ name: 'search', type: 'string', required: false })
+  async findAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+    @Query() search: string,
+  ) {
     return this.userService.findAll(pageOptionsDto);
   }
 
