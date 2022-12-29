@@ -10,17 +10,20 @@ import { User } from './users/entities/user.entity';
 import { Category } from './categories/entities/category.entity';
 import { BannersModule } from './banners/banners.module';
 import { Banner } from './banners/entities/banner.entity';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      // url: process.env.DATABASE_URL,
-      host: 'localhost',
-      port: 5432,
-      username: 'abc123',
-      password: 'abc123',
-      database: 'bookstoredb',
+      // url: process.env.DATABASE_URL, //for production
+      host: process.env.DATABASE_HOST,
+      port: Number(process.env.PORT),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE,
       entities: [Author, User, Category, Banner],
       synchronize: true,
     }),
@@ -28,6 +31,7 @@ import { Banner } from './banners/entities/banner.entity';
     AuthorsModule,
     UsersModule,
     BannersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger/dist';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -34,10 +26,7 @@ export class AuthorsController {
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateAuthorDto: UpdateAuthorDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
     return await this.authorsService.update(id, updateAuthorDto);
   }
 
