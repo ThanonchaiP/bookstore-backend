@@ -5,9 +5,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
 import { UserQueryParamDto } from './dto/user-query-param.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
-import { AdminJwtAuthGuard } from 'src/auth/admin-jwt-auth.guard';
+import { AdminJwtAuthGuard } from 'src/common/guards/admin-jwt-auth.guard';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth('access-token')
@@ -29,7 +29,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   async findOne(@Param('id') id: string, @Req() req: any) {
     if (id !== req.user.id) throw new UnauthorizedException();
 

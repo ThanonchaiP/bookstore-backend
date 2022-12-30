@@ -26,4 +26,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   image: string;
+
+  @ApiProperty({ default: null })
+  refreshToken: string;
 }
