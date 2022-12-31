@@ -12,6 +12,8 @@ import { BannersModule } from './banners/banners.module';
 import { Banner } from './banners/entities/banner.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { PublisherModule } from './publisher/publisher.module';
+import { Publisher } from './publisher/entities/publisher.entity';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE,
-      entities: [Author, User, Category, Banner],
+      entities: [Author, User, Category, Banner, Publisher],
       synchronize: true,
     }),
     CategoriesModule,
@@ -32,6 +34,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     BannersModule,
     AuthModule,
+    PublisherModule,
   ],
   controllers: [AppController],
   providers: [AppService],
