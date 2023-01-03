@@ -18,7 +18,7 @@ export class PublisherController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(@Query() pageOptionsDto: PageOptionsDto, @Query() params: PublisherQueryParamDto) {
-    return { data: await this.publisherService.findAll(params, pageOptionsDto) };
+    return await this.publisherService.findAll(params, pageOptionsDto);
   }
 
   @Get(':id')
