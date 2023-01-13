@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, AfterLoad } from 'typeorm';
 
 @Entity({
   name: 'banner',
@@ -24,4 +24,9 @@ export class Banner {
 
   @Column({ nullable: true })
   image: string;
+
+  @AfterLoad()
+  getUrl(): void {
+    this.image = `${process.env.URL}/images/banner/${this.image}`;
+  }
 }

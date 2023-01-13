@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -16,9 +17,14 @@ import { PublisherModule } from './publisher/publisher.module';
 import { Publisher } from './publisher/entities/publisher.entity';
 import { BooksModule } from './books/books.module';
 import { Book } from './books/entities/book.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/api*'],
+    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',

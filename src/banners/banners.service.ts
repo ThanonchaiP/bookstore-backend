@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import * as moment from 'moment';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,7 +24,16 @@ export class BannersService {
   }
 
   async findAll() {
-    return { data: await this.bannerRepository.find() };
+    const now = moment().format();
+
+    const result = await this.bannerRepository
+      .createQueryBuilder('banner')
+      .where('banner.start <= :startDate', { startDate: now })
+      .andWhere('banner.end >= :endDate', { endDate: now })
+      .andWhere('banner.active = :active', { active: true })
+      .getMany();
+
+    return { data: result };
   }
 
   async findOne(id: number) {
