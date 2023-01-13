@@ -27,6 +27,16 @@ export class BooksController {
     return { data: await this.booksService.findOne(id) };
   }
 
+  @Get('recommend/best-seller')
+  async bestSeller(@Query() pageOptions: PageOptionsDto) {
+    return { data: await this.booksService.bestSeller(pageOptions) };
+  }
+
+  @Get('recommend/new-book')
+  async newBook(@Query() pageOptions: PageOptionsDto) {
+    return { data: await this.booksService.newBook(pageOptions) };
+  }
+
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return await this.booksService.update(id, updateBookDto);
