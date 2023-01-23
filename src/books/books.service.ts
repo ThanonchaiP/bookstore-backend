@@ -1,9 +1,9 @@
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
 import { PageDto } from 'src/common/dtos/page.dto';
-import { Repository } from 'typeorm';
 import { BookQueryParamDto } from './dto/book-query-param.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -29,17 +29,23 @@ export class BooksService {
   }
 
   async findAll(params: BookQueryParamDto, pageOptions: PageOptionsDto) {
-    const { search, categoryId, authorId, publisherId } = params;
-    const { skip, limit, order } = pageOptions;
+    const { search, authorId, publisherId, category, orderBy, op, min, max } = params;
+    const { skip, limit } = pageOptions;
 
     const queryBuilder = this.bookRepository.createQueryBuilder('book');
-    queryBuilder.select(['book.id', 'book.name', 'book.price']);
+    queryBuilder.select(['book.id', 'book.name', 'book.price', 'book.publishedDate', 'book.sold', 'book.image']);
     queryBuilder.leftJoin('book.author', 'author').addSelect(['author.id', 'author.name']);
     queryBuilder.leftJoinAndSelect('book.category', 'category');
     queryBuilder.leftJoinAndSelect('book.publisher', 'publisher');
 
     if (authorId) queryBuilder.where('author.id = :authorId', { authorId });
-    if (categoryId) queryBuilder.where('category.id = :categoryId', { categoryId });
+
+    if (category?.length > 1) {
+      queryBuilder.where('category.id IN (:...categories)', { categories: category });
+    } else if (category) {
+      queryBuilder.where('category.id = :categoryId', { categoryId: category });
+    }
+
     if (publisherId) queryBuilder.where('publisher.id = :publisherId', { publisherId });
 
     if (search) {
@@ -51,10 +57,12 @@ export class BooksService {
         .setParameter('search', `%${search}%`);
     }
 
+    if (min && max) queryBuilder.where(`book.price BETWEEN '${min}' AND '${max}'`);
+
     queryBuilder
       .skip(skip)
       .take(limit)
-      .orderBy('book.name', order || 'ASC');
+      .orderBy(orderBy ? `book.${orderBy}` : 'book.name', op || 'ASC');
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();

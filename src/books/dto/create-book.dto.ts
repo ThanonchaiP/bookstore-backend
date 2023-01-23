@@ -32,4 +32,7 @@ export class CreateBookDto {
 
   @ApiProperty()
   publishedDate: Date;
+
+  @ApiProperty()
+  sold: number;
 }

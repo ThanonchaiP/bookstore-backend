@@ -1,7 +1,15 @@
 import { Author } from 'src/authors/entities/author.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { Publisher } from 'src/publisher/entities/publisher.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  AfterLoad,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'book',
@@ -48,4 +56,9 @@ export class Book {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @AfterLoad()
+  getUrl(): void {
+    this.image = `${process.env.URL}/images/book/${this.image}`;
+  }
 }

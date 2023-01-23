@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common/pipes';
 import { ApiTags } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
 import { BooksService } from './books.service';
@@ -18,7 +19,10 @@ export class BooksController {
   }
 
   @Get()
-  async findAll(@Query() params: BookQueryParamDto, @Query() pageOptions: PageOptionsDto) {
+  async findAll(
+    @Query(new ValidationPipe({ transform: true })) params: BookQueryParamDto,
+    @Query() pageOptions: PageOptionsDto,
+  ) {
     return await this.booksService.findAll(params, pageOptions);
   }
 
