@@ -38,26 +38,26 @@ export class BooksService {
     queryBuilder.leftJoinAndSelect('book.category', 'category');
     queryBuilder.leftJoinAndSelect('book.publisher', 'publisher');
 
-    if (authorId) queryBuilder.where('author.id = :authorId', { authorId });
+    if (authorId) queryBuilder.andWhere('author.id = :authorId', { authorId });
 
     if (category?.length > 1) {
-      queryBuilder.where('category.id IN (:...categories)', { categories: category });
+      queryBuilder.andWhere('category.id IN (:...categories)', { categories: category });
     } else if (category) {
-      queryBuilder.where('category.id = :categoryId', { categoryId: category });
+      queryBuilder.andWhere('category.id = :categoryId', { categoryId: category });
     }
 
-    if (publisherId) queryBuilder.where('publisher.id = :publisherId', { publisherId });
+    if (publisherId) queryBuilder.andWhere('publisher.id = :publisherId', { publisherId });
 
     if (search) {
       queryBuilder
-        .where('book.name LIKE :search')
+        .andWhere('book.name LIKE :search')
         .orWhere('author.name LIKE :search')
         .orWhere('category.name LIKE :search')
         .orWhere('publisher.name LIKE :search')
         .setParameter('search', `%${search}%`);
     }
 
-    if (min && max) queryBuilder.where(`book.price BETWEEN '${min}' AND '${max}'`);
+    if (min && max) queryBuilder.andWhere(`book.price BETWEEN '${min}' AND '${max}'`);
 
     queryBuilder
       .skip(skip)
