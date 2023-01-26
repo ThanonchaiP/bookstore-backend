@@ -93,7 +93,7 @@ export class BooksService {
     const { skip, limit } = pageOptions;
 
     const queryBuilder = this.bookRepository.createQueryBuilder('book');
-    queryBuilder.select(['book.id', 'book.name', 'book.price', 'book.sold']);
+    queryBuilder.select(['book.id', 'book.name', 'book.price', 'book.sold', 'book.image']);
     queryBuilder.leftJoin('book.author', 'author').addSelect(['author.id', 'author.name']);
     queryBuilder.leftJoinAndSelect('book.category', 'category');
     queryBuilder.leftJoinAndSelect('book.publisher', 'publisher');
@@ -111,7 +111,7 @@ export class BooksService {
     const { skip, limit } = pageOptions;
 
     const queryBuilder = this.bookRepository.createQueryBuilder('book');
-    queryBuilder.select(['book.id', 'book.name', 'book.price', 'book.sold', 'book.publishedDate']);
+    queryBuilder.select(['book.id', 'book.name', 'book.price', 'book.sold', 'book.publishedDate', 'book.image']);
     queryBuilder.leftJoin('book.author', 'author').addSelect(['author.id', 'author.name']);
     queryBuilder.leftJoinAndSelect('book.category', 'category');
     queryBuilder.leftJoinAndSelect('book.publisher', 'publisher');

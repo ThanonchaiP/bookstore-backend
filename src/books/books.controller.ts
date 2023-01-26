@@ -33,12 +33,12 @@ export class BooksController {
 
   @Get('recommend/best-seller')
   async bestSeller(@Query() pageOptions: PageOptionsDto) {
-    return { data: await this.booksService.bestSeller(pageOptions) };
+    return await this.booksService.bestSeller(pageOptions);
   }
 
   @Get('recommend/new-book')
   async newBook(@Query() pageOptions: PageOptionsDto) {
-    return { data: await this.booksService.newBook(pageOptions) };
+    return await this.booksService.newBook(pageOptions);
   }
 
   @Patch(':id')
