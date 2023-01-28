@@ -73,7 +73,14 @@ export class BooksService {
   }
 
   async findOne(id: string) {
-    return await this.bookRepository.findOne({ where: { id } });
+    const queryBuilder = this.bookRepository.createQueryBuilder('book');
+    queryBuilder.leftJoin('book.author', 'author').addSelect(['author.id', 'author.name']);
+    queryBuilder.leftJoinAndSelect('book.category', 'category');
+    queryBuilder.leftJoinAndSelect('book.publisher', 'publisher');
+    queryBuilder.where('book.id = :id', { id });
+
+    const result = await queryBuilder.getOne();
+    return result;
   }
 
   async update(id: string, updateBookDto: UpdateBookDto) {
