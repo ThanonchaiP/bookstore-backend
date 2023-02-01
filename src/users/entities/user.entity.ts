@@ -26,7 +26,7 @@ export class User {
   @Column('enum', { enum: Role, array: true, default: [Role.User] })
   role: Role[];
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column({ nullable: true })
