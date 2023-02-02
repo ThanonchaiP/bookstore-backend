@@ -18,6 +18,10 @@ import { Publisher } from './publisher/entities/publisher.entity';
 import { BooksModule } from './books/books.module';
 import { Book } from './books/entities/book.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { CartModule } from './cart/cart.module';
+import { Cart } from './cart/entities/cart.entity';
+import { CartItemModule } from './cart-item/cart-item.module';
+import { CartItem } from './cart-item/entities/cart-item.entity';
 
 @Module({
   imports: [
@@ -34,7 +38,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE,
-      entities: [Author, User, Category, Banner, Publisher, Book],
+      entities: [Author, User, Category, Banner, Publisher, Book, Cart, CartItem],
       synchronize: true,
     }),
     CategoriesModule,
@@ -44,6 +48,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     AuthModule,
     PublisherModule,
     BooksModule,
+    CartModule,
+    CartItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

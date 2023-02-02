@@ -1,4 +1,5 @@
 import { Author } from 'src/authors/entities/author.entity';
+import { CartItem } from 'src/cart-item/entities/cart-item.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { Publisher } from 'src/publisher/entities/publisher.entity';
 import {
@@ -7,6 +8,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -56,6 +58,9 @@ export class Book {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => CartItem, (cartItem) => cartItem.book)
+  public cartItems: CartItem[];
 
   @AfterLoad()
   getUrl(): void {

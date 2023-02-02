@@ -10,7 +10,6 @@ import { AdminJwtAuthGuard } from 'src/common/guards/admin-jwt-auth.guard';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 
 @ApiTags('Users')
-@ApiBearerAuth('access-token')
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
@@ -24,12 +23,14 @@ export class UsersController {
   @Get()
   @UseGuards(AdminJwtAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('access-token')
   async findAll(@Query() pageOptionsDto: PageOptionsDto, @Query() params: UserQueryParamDto) {
     return this.userService.findAll(pageOptionsDto, params);
   }
 
   @Get(':id')
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth('access-token')
   async findOne(@Param('id') id: string, @Req() req: any) {
     if (id !== req.user.id) throw new UnauthorizedException();
 
@@ -38,6 +39,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth('access-token')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     await this.userService.update(id, updateUserDto);
     return { message: 'Success' };
