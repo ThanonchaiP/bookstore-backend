@@ -12,9 +12,6 @@ export class CartItem {
   @Column()
   quantity: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  price: number;
-
   @CreateDateColumn()
   createdAt: Date;
 

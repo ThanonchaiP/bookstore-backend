@@ -20,9 +20,7 @@ export class CartService {
   async findOne(id: string) {
     const queryBuilder = await this.cartRepository.createQueryBuilder('cart').where('cart.id = :id', { id });
     queryBuilder.leftJoin('cart.user', 'user').addSelect(['user.id', 'user.firstname', 'user.lastname']);
-    queryBuilder
-      .leftJoin('cart.cartItems', 'cartItems')
-      .addSelect(['cartItems.id', 'cartItems.quantity', 'cartItems.price']);
+    queryBuilder.leftJoin('cart.cartItems', 'cartItems').addSelect(['cartItems.id', 'cartItems.quantity']);
 
     queryBuilder
       .leftJoin('cartItems.book', 'book')
@@ -33,16 +31,13 @@ export class CartService {
 
   async findByUserId(userId: string) {
     const queryBuilder = await this.cartRepository.createQueryBuilder('cart').select(['cart.id']);
-
     queryBuilder.leftJoin('cart.user', 'user').where('user.id = :userId', { userId });
-
-    queryBuilder
-      .leftJoin('cart.cartItems', 'cartItems')
-      .addSelect(['cartItems.id', 'cartItems.quantity', 'cartItems.price']);
-
+    queryBuilder.leftJoin('cart.cartItems', 'cartItems').addSelect(['cartItems.id', 'cartItems.quantity']);
     queryBuilder
       .leftJoin('cartItems.book', 'book')
-      .addSelect(['book.id', 'book.name', 'book.price', 'book.quantity', 'book.image']);
+      .addSelect(['book.id', 'book.name', 'book.price', 'book.quantity', 'book.image'])
+      .leftJoinAndSelect('book.author', 'author');
+    queryBuilder.orderBy('book.name', 'ASC');
 
     return queryBuilder.getOne();
   }

@@ -62,7 +62,10 @@ export class UsersService {
 
   async findOne(id: string) {
     try {
-      return await this.userRepository.findOne({ where: { id } });
+      const user = await this.userRepository.findOne({ where: { id } });
+      delete user.password;
+
+      return user;
     } catch (error) {}
   }
 

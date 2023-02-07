@@ -9,7 +9,4 @@ export class CreateCartItemDto {
 
   @ApiProperty()
   quantity: number;
-
-  @ApiProperty()
-  price: number;
 }

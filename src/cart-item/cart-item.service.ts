@@ -25,10 +25,9 @@ export class CartItemService {
   }
 
   async update(id: string, updateCartItemDto: UpdateCartItemDto) {
-    const { price, quantity } = updateCartItemDto;
+    const { quantity } = updateCartItemDto;
 
-    if (price) updateCartItemDto.price = price;
-    if (quantity) updateCartItemDto.quantity = quantity;
+    updateCartItemDto.quantity = quantity;
     return await this.cartItemRepository.update(id, updateCartItemDto);
   }
 
