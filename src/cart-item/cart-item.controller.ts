@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CartService } from 'src/cart/cart.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { CartItemService } from './cart-item.service';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
@@ -10,11 +11,15 @@ import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 @ApiBearerAuth('access-token')
 @UseGuards(AccessTokenGuard)
 export class CartItemController {
-  constructor(private readonly cartItemService: CartItemService) {}
+  constructor(private readonly cartItemService: CartItemService, private readonly cartService: CartService) {}
 
   @Post()
-  async create(@Body() createCartItemDto: CreateCartItemDto) {
-    return { data: await this.cartItemService.create(createCartItemDto) };
+  async create(@Body() createCartItemDto: CreateCartItemDto, @Req() req: any) {
+    const userId = req.user.id;
+
+    await this.cartItemService.create(createCartItemDto);
+    const cart = await this.cartService.findByUserId(userId);
+    return { data: cart };
   }
 
   @Patch(':id')

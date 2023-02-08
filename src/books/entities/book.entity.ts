@@ -1,6 +1,7 @@
 import { Author } from 'src/authors/entities/author.entity';
 import { CartItem } from 'src/cart-item/entities/cart-item.entity';
 import { Category } from 'src/categories/entities/category.entity';
+import { OrderItem } from 'src/order-item/entities/order-item.entity';
 import { Publisher } from 'src/publisher/entities/publisher.entity';
 import {
   AfterLoad,
@@ -61,6 +62,9 @@ export class Book {
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.book)
   public cartItems: CartItem[];
+
+  @OneToMany(() => OrderItem, (orderItems) => orderItems.book)
+  public orderItems: OrderItem[];
 
   @AfterLoad()
   getUrl(): void {

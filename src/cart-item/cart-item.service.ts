@@ -13,7 +13,14 @@ export class CartItemService {
   ) {}
 
   async create(createCartItemDto: CreateCartItemDto) {
-    const { cartId, bookId } = createCartItemDto;
+    const { cartId, bookId, quantity = 1 } = createCartItemDto;
+
+    //exist item
+    const exist = await this.cartItemRepository.findOne({ where: { cart: { id: cartId }, book: { id: bookId } } });
+    if (exist) {
+      this.cartItemRepository.update(exist.id, { quantity: exist.quantity + quantity });
+      return { id: exist.id };
+    }
 
     const newItem = await this.cartItemRepository.save({
       ...createCartItemDto,

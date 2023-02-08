@@ -18,9 +18,9 @@ export class CartItem {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Cart, (cart) => cart.cartItems)
+  @ManyToOne(() => Cart, (cart) => cart.cartItems, { onDelete: 'CASCADE' })
   cart: Cart;
 
-  @ManyToOne(() => Book, (book) => book.cartItems)
+  @ManyToOne(() => Book, (book) => book.cartItems, { onDelete: 'CASCADE' })
   book: Book;
 }
