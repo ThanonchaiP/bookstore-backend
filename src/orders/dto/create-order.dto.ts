@@ -3,8 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateOrderDto {
   @ApiProperty()
-  @IsNotEmpty()
-  cartId: string;
+  shippingFee: number;
 
   @ApiProperty()
   @IsNotEmpty()

@@ -23,6 +23,9 @@ export class Order {
   @Column({ default: 'success' })
   transactionStatus: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  shippingFee: number;
+
   @Column()
   totalQty: number;
 
