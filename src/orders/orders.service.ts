@@ -22,10 +22,16 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto, userId: string) {
     try {
-      const { totalPrice, totalQty, items, shippingFee = 0 } = createOrderDto;
+      const { totalPrice, totalQty, items, shippingFee = 0, orderDate } = createOrderDto;
 
       //Create Order
-      const order = await this.orderRepository.save({ user: { id: userId }, totalPrice, totalQty, shippingFee });
+      const order = await this.orderRepository.save({
+        user: { id: userId },
+        totalPrice,
+        totalQty,
+        shippingFee,
+        orderDate,
+      });
 
       //Create OrderItem
       items.map((i) => (i.order = { id: order.id }));

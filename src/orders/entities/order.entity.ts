@@ -32,6 +32,9 @@ export class Order {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalPrice: number;
 
+  @Column()
+  orderDate: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 

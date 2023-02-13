@@ -13,6 +13,10 @@ export class CreateOrderDto {
   @IsNotEmpty()
   totalQty: number;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  orderDate: Date;
+
   @ApiProperty({ isArray: true })
   items: {
     order: { id: string };
