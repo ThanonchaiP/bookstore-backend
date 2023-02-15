@@ -1,9 +1,8 @@
 /* eslint-disable prettier/prettier */
 import * as argon2 from 'argon2';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -12,6 +11,7 @@ import { PageOptionsDto } from 'src/common/dtos/page-options.dto';
 import { PageMetaDto } from 'src/common/dtos/page-meta.dto';
 import { PageDto } from 'src/common/dtos/page.dto';
 import { UserQueryParamDto } from './dto/user-query-param.dto';
+import { UpdatePasswordUserDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -79,5 +79,15 @@ export class UsersService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async updatePassword(id: string, updatePasswordUserDto: UpdatePasswordUserDto) {
+    const { password, newPassword } = updatePasswordUserDto;
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    const isValid = await argon2.verify(user.password, password);
+    if (!isValid) throw new UnauthorizedException('Incorrect password.');
+
+    return await this.userRepository.update(id, { password: await argon2.hash(newPassword) });
   }
 }

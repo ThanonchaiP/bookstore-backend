@@ -8,6 +8,7 @@ import { UserQueryParamDto } from './dto/user-query-param.dto';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { AdminJwtAuthGuard } from 'src/common/guards/admin-jwt-auth.guard';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { UpdatePasswordUserDto } from './dto/update-password.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -36,6 +37,14 @@ export class UsersController {
 
     const user = await this.userService.findOne(id);
     return { data: user };
+  }
+
+  @Patch('password')
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth('access-token')
+  async updatePassword(@Req() req: any, @Body() params: UpdatePasswordUserDto) {
+    const userId = req.user.id;
+    return await this.userService.updatePassword(userId, params);
   }
 
   @Patch(':id')
