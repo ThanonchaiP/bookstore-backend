@@ -7,12 +7,15 @@ import { AuthDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Cart)
+    private cartRepository: Repository<Cart>,
     private jwtService: JwtService,
     private usersService: UsersService,
   ) {}
@@ -29,6 +32,9 @@ export class AuthService {
       ...createUserDto,
       password: await argon2.hash(password),
     });
+
+    //Create Cart
+    await this.cartRepository.save({ user: { id: newUser.id } });
 
     const tokens = await this.getTokens(newUser);
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);

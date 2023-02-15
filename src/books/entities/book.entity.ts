@@ -1,6 +1,7 @@
 import { Author } from 'src/authors/entities/author.entity';
 import { CartItem } from 'src/cart-item/entities/cart-item.entity';
 import { Category } from 'src/categories/entities/category.entity';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { OrderItem } from 'src/order-item/entities/order-item.entity';
 import { Publisher } from 'src/publisher/entities/publisher.entity';
 import {
@@ -65,6 +66,9 @@ export class Book {
 
   @OneToMany(() => OrderItem, (orderItems) => orderItems.book)
   public orderItems: OrderItem[];
+
+  @OneToMany(() => Favorite, (favorite) => favorite.book)
+  public favorites: Favorite[];
 
   @AfterLoad()
   getUrl(): void {

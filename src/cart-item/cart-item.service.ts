@@ -18,7 +18,7 @@ export class CartItemService {
     //exist item
     const exist = await this.cartItemRepository.findOne({ where: { cart: { id: cartId }, book: { id: bookId } } });
     if (exist) {
-      this.cartItemRepository.update(exist.id, { quantity: exist.quantity + quantity });
+      await this.cartItemRepository.update(exist.id, { quantity: exist.quantity + quantity });
       return { id: exist.id };
     }
 

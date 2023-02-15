@@ -8,6 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import { AcessTokenStrategy } from './strategies/accessToken.strategy';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 import { UsersService } from 'src/users/users.service';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { UsersService } from 'src/users/users.service';
     JwtModule.register({
       signOptions: { expiresIn: '1d' },
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Cart]),
   ],
   providers: [AuthService, UsersService, AcessTokenStrategy, RefreshTokenStrategy],
   controllers: [AuthController],

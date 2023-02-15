@@ -26,6 +26,8 @@ import { OrdersModule } from './orders/orders.module';
 import { OrderItemModule } from './order-item/order-item.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './order-item/entities/order-item.entity';
+import { FavoritesModule } from './favorites/favorites.module';
+import { Favorite } from './favorites/entities/favorite.entity';
 
 @Module({
   imports: [
@@ -42,7 +44,7 @@ import { OrderItem } from './order-item/entities/order-item.entity';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE,
-      entities: [Author, User, Category, Banner, Publisher, Book, Cart, CartItem, Order, OrderItem],
+      entities: [Author, User, Category, Banner, Publisher, Book, Cart, CartItem, Order, OrderItem, Favorite],
       synchronize: true,
     }),
     CategoriesModule,
@@ -56,6 +58,7 @@ import { OrderItem } from './order-item/entities/order-item.entity';
     CartItemModule,
     OrdersModule,
     OrderItemModule,
+    FavoritesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
