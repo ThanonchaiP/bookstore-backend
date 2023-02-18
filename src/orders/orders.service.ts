@@ -57,7 +57,7 @@ export class OrdersService {
     queryBuilder
       .leftJoin('orderItems.book', 'book')
       .addSelect(['book.id', 'book.name', 'book.price', 'book.quantity', 'book.image']);
-
+    queryBuilder.leftJoinAndSelect('orderItems.review', 'review');
     queryBuilder.skip(skip).take(limit).orderBy('order.createdAt', 'DESC');
 
     const itemCount = await queryBuilder.getCount();
