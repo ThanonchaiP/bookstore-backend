@@ -16,5 +16,5 @@ export class CreateReviewDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  userId: string;
+  orderItemId: string;
 }

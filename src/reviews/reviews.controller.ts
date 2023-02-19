@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, UseGuards, Get, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { ReviewsService } from './reviews.service';
@@ -13,8 +13,14 @@ export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewsService.create(createReviewDto);
+  create(@Body() createReviewDto: CreateReviewDto, @Req() req: any) {
+    const userId = req.user.id;
+    return this.reviewsService.create(userId, createReviewDto);
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return { data: await this.reviewsService.getReviewById(+id) };
   }
 
   @Get('/books/:bookId')
