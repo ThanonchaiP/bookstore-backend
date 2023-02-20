@@ -3,6 +3,7 @@ import { Cart } from 'src/cart/entities/cart.entity';
 import { Order } from 'src/orders/entities/order.entity';
 import { Favorite } from 'src/favorites/entities/favorite.entity';
 import { Role } from '../enum/user.enum';
+import { Review } from 'src/reviews/entities/review.entity';
 
 @Entity({
   name: 'user',
@@ -49,4 +50,7 @@ export class User {
 
   @OneToMany(() => Favorite, (favorite) => favorite.user)
   favorites: Favorite[];
+
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 }

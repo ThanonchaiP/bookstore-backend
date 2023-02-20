@@ -36,9 +36,34 @@ export class ReviewsService {
 
   async getReviewsByBookId(id: string) {
     const queryBuilder = this.reviewRepository.createQueryBuilder('review');
+    queryBuilder.leftJoin('review.user', 'user').addSelect(['user.id', 'user.firstname']);
     queryBuilder.leftJoin('review.orderItems', 'orderItems');
     queryBuilder.where('orderItems.book = :id', { id });
-    return await queryBuilder.getMany();
+    queryBuilder.orderBy('review.createdAt', 'DESC');
+
+    const reviews = await queryBuilder.getMany();
+    const ratingAvg = reviews.reduce((sum, item) => item.rating + sum, 0) / reviews.length || 0;
+
+    const ratingStar = await this.orderItemRepository
+      .createQueryBuilder('orderItem')
+      .where('orderItem.book = :id', { id })
+      .leftJoin('orderItem.review', 'review')
+      .select('review.rating, COUNT(review.id) count')
+      .groupBy('review.rating')
+      .orderBy('review.rating', 'ASC')
+      .getRawMany();
+
+    const ratingStartResult = [];
+    if (reviews.length > 0) {
+      for (let i = 0; i < 5; i++) {
+        const exist = ratingStar.find((item) => item.rating === i + 1);
+        if (exist) {
+          ratingStartResult.push({ ...exist, percent: (exist.count / reviews.length) * 100 });
+        } else ratingStartResult.push({ rating: i + 1, count: 0, percent: 0 });
+      }
+    }
+
+    return { reviews, ratingStar: ratingStartResult, ratingAvg };
   }
 
   async update(id: number, updateReviewDto: UpdateReviewDto) {

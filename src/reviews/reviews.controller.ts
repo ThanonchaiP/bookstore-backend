@@ -7,12 +7,12 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 
 @ApiTags('Review')
 @Controller('reviews')
-@ApiBearerAuth('access-token')
-@UseGuards(AccessTokenGuard)
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
+  @ApiBearerAuth('access-token')
+  @UseGuards(AccessTokenGuard)
   create(@Body() createReviewDto: CreateReviewDto, @Req() req: any) {
     const userId = req.user.id;
     return this.reviewsService.create(userId, createReviewDto);
@@ -24,11 +24,13 @@ export class ReviewsController {
   }
 
   @Get('/books/:bookId')
-  async findOne(@Param('bookId') id: string) {
+  async getOneByBookId(@Param('bookId') id: string) {
     return { data: await this.reviewsService.getReviewsByBookId(id) };
   }
 
   @Patch(':id')
+  @ApiBearerAuth('access-token')
+  @UseGuards(AccessTokenGuard)
   async update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
     return await this.reviewsService.update(+id, updateReviewDto);
   }

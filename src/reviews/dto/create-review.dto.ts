@@ -3,7 +3,6 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateReviewDto {
   @ApiProperty()
-  @IsNotEmpty()
   body: string;
 
   @ApiProperty()
